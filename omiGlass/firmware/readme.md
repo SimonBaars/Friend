@@ -17,6 +17,11 @@ arduino-cli board list
 arduino-cli board details -b esp32:esp32:XIAO_ESP32S3
 ```
 
+Some Linux notes:
+- You may have to execute above commands in `sudo` such that we can access the usb port later
+- You might need to install the `pyserial` Python library (`pip3 install pyserial`)
+- The port will look like `/dev/ttyACM0` instead of `COM5`
+
 ### Compile and upload
 
 Change COM5 to the port name from the board list output
