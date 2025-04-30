@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SafeAreaView, StyleSheet, View, Text } from 'react-native';
+import { SafeAreaView, StyleSheet, View, Text, ActivityIndicator } from 'react-native';
 import { RoundButton } from './components/RoundButton';
 import { Theme } from './components/theme';
 import { useDevice } from '../modules/useDevice';
@@ -25,8 +25,13 @@ export const Main = React.memo(() => {
         <SafeAreaView style={styles.container}>
             {!device && (
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', alignSelf: 'center' }}>
-                    {isConnecting ? (
-                        <Text style={styles.statusText}>Connecting to OpenGlass...</Text>
+                    {isConnecting || isAutoConnecting ? (
+                        <View>
+                            <Text style={styles.statusText}>
+                                {isConnecting ? "Scanning for OpenGlass devices..." : "Connecting to OpenGlass..."}
+                            </Text>
+                            <ActivityIndicator size="large" color={Theme.primary} />
+                        </View>
                     ) : (
                         <RoundButton title="Connect to the device" action={handleConnect} />
                     )}

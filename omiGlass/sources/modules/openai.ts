@@ -1,22 +1,20 @@
 import axios from "axios";
-import fs from "fs";
 import { keys } from "../keys";
 
-export async function transcribeAudio(audioPath: string) {
-    const audioBase64 = fs.readFileSync(audioPath, { encoding: 'base64' });
+export async function transcribeAudio(audioBase64: string) {
     try {
         const response = await axios.post("https://api.openai.com/v1/audio/transcriptions", {
             audio: audioBase64,
         }, {
             headers: {
-                'Authorization': `Bearer ${keys.openai}`,  // Replace YOUR_API_KEY with your actual OpenAI API key
+                'Authorization': `Bearer ${keys.openai}`,
                 'Content-Type': 'application/json'
             },
         });
         return response.data;
     } catch (error) {
         console.error("Error in transcribeAudio:", error);
-        return null; // or handle error differently
+        return null;
     }
 }
 
@@ -57,27 +55,25 @@ export async function textToSpeech(text: string) {
     }
 }
 
-// Function to convert image to base64
-function imageToBase64(path: string) {
-    const image = fs.readFileSync(path, { encoding: 'base64' });
-    return `data:image/jpeg;base64,${image}`; // Adjust the MIME type if necessary (e.g., image/png)
-}
-
-export async function describeImage(imagePath: string) {
-    const imageBase64 = imageToBase64(imagePath);
+export async function describeImage(imageBase64: string) {
     try {
+        // Ensure the base64 string has the correct format
+        const formattedBase64 = imageBase64.startsWith('data:image') 
+            ? imageBase64 
+            : `data:image/jpeg;base64,${imageBase64}`;
+            
         const response = await axios.post("https://api.openai.com/v1/images/descriptions", {
-            image: imageBase64,
+            image: formattedBase64,
         }, {
             headers: {
-                'Authorization': `Bearer ${keys.openai}`,  // Replace YOUR_API_KEY with your actual OpenAI API key
+                'Authorization': `Bearer ${keys.openai}`,
                 'Content-Type': 'application/json'
             },
         });
         return response.data;
     } catch (error) {
         console.error("Error in describeImage:", error);
-        return null; // or handle error differently
+        return null;
     }
 }
 
